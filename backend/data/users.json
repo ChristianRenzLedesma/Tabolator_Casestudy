@@ -1,15 +1,4 @@
 {
-    "users": [
-        {
-            "id": 6,
-            "name": "Renz",
-            "age": "21"
-        },
-        {
-            "id": 7,
-            "name": "Ledesma",
-            "age": "21"
-        }
-    ],
+    "users": [],
     "nextId": 8
 }

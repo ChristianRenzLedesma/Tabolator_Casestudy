@@ -1,0 +1,12 @@
+{
+    "name": "tabolator/backend",
+    "description": "Tabolator PHP Backend API",
+    "autoload": {
+        "psr-4": {
+            "Tabolator\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

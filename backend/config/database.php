@@ -145,14 +145,14 @@ class Database {
                 $categoryIds[$row['name']] = $row['id'];
             }
 
-            // Insert sample criteria
+            // Insert sample criteria (totaling 100%)
             $criteria = [
-                [$categoryIds['Talent'], 'Performance Quality', 40.00, 1, 10],
-                [$categoryIds['Talent'], 'Originality', 30.00, 1, 10],
-                [$categoryIds['Talent'], 'Stage Presence', 30.00, 1, 10],
-                [$categoryIds['Beauty'], 'Facial Features', 35.00, 1, 10],
-                [$categoryIds['Beauty'], 'Skin Complexion', 30.00, 1, 10],
-                [$categoryIds['Beauty'], 'Body Proportion', 35.00, 1, 10]
+                [$categoryIds['Talent'], 'Performance Quality', 25.00, 1, 10],
+                [$categoryIds['Talent'], 'Originality', 20.00, 1, 10],
+                [$categoryIds['Talent'], 'Stage Presence', 15.00, 1, 10],
+                [$categoryIds['Beauty'], 'Facial Features', 15.00, 1, 10],
+                [$categoryIds['Beauty'], 'Skin Complexion', 10.00, 1, 10],
+                [$categoryIds['Beauty'], 'Body Proportion', 15.00, 1, 10]
             ];
 
             $stmt = $pdo->prepare("INSERT IGNORE INTO criteria (category_id, name, percentage, min_score, max_score) VALUES (?, ?, ?, ?, ?)");

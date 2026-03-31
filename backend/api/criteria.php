@@ -1,5 +1,5 @@
 <?php
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -38,6 +38,18 @@ try {
             
         case 'POST':
             $data = json_decode(file_get_contents('php://input'), true);
+            
+            // Validate total percentage doesn't exceed 100%
+            $totalCheck = $pdo->prepare("SELECT SUM(percentage) as total FROM criteria");
+            $totalCheck->execute();
+            $currentTotal = $totalCheck->fetch()['total'] ?? 0;
+            
+            $newTotal = $currentTotal + $data['percentage'];
+            
+            if ($newTotal > 100) {
+                throw new Exception("Cannot add criterion. Total percentage would be {$newTotal}%. Maximum allowed is 100%.");
+            }
+            
             $stmt = $pdo->prepare("
                 INSERT INTO criteria (category_id, name, percentage, min_score, max_score) 
                 VALUES (?, ?, ?, ?, ?)
@@ -54,6 +66,23 @@ try {
             
         case 'PUT':
             $data = json_decode(file_get_contents('php://input'), true);
+            
+            // Get current criterion percentage
+            $currentStmt = $pdo->prepare("SELECT percentage FROM criteria WHERE id = ?");
+            $currentStmt->execute([$data['id']]);
+            $currentPercentage = $currentStmt->fetch()['percentage'] ?? 0;
+            
+            // Calculate new total
+            $totalCheck = $pdo->prepare("SELECT SUM(percentage) as total FROM criteria WHERE id != ?");
+            $totalCheck->execute([$data['id']]);
+            $otherTotal = $totalCheck->fetch()['total'] ?? 0;
+            
+            $newTotal = $otherTotal + $data['percentage'];
+            
+            if ($newTotal > 100) {
+                throw new Exception("Cannot update criterion. Total percentage would be {$newTotal}%. Maximum allowed is 100%.");
+            }
+            
             $stmt = $pdo->prepare("
                 UPDATE criteria 
                 SET name = ?, percentage = ?, min_score = ?, max_score = ? 

@@ -23,7 +23,16 @@ try {
             $data = json_decode(file_get_contents('php://input'), true);
             $stmt = $pdo->prepare("INSERT INTO contestants (name, status) VALUES (?, 'Active')");
             $stmt->execute([$data['name']]);
-            echo json_encode(['success' => true, 'message' => 'Contestant added successfully']);
+            
+            // Get the inserted contestant with ID and status
+            $insertedId = $pdo->lastInsertId();
+            $createdContestant = [
+                'id' => $insertedId,
+                'name' => $data['name'],
+                'status' => 'Active',
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            echo json_encode(['success' => true, 'message' => 'Contestant added successfully', 'data' => $createdContestant]);
             break;
             
         case 'PUT':

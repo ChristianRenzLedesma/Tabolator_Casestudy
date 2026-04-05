@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
 CREATE TABLE IF NOT EXISTS `criteria` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `category_id` INT(11) NOT NULL,
+    `category_name` VARCHAR(255) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `description` TEXT NULL,
     `percentage` DECIMAL(5,2) NOT NULL DEFAULT '0.00',
@@ -48,7 +49,8 @@ CREATE TABLE IF NOT EXISTS `criteria` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE,
-    INDEX `idx_category_id` (`category_id`)
+    INDEX `idx_category_id` (`category_id`),
+    INDEX `idx_category_name` (`category_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------

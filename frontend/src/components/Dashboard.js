@@ -1,156 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Dashboard.css';
 
-const Dashboard = () => {
-  const [overallStats, setOverallStats] = useState({
-    totalContestants: 0,
-    activeContestants: 0,
-    eliminatedContestants: 0,
-    disqualifiedContestants: 0,
-    totalJudges: 0,
-    activeJudges: 0,
-    totalCategories: 0,
-    totalCriteria: 0,
-    averageScore: '0.0'
-  });
-
-  const [recentContestants, setRecentContestants] = useState([]);
-  const [recentJudges, setRecentJudges] = useState([]);
-  const [topScores, setTopScores] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Dashboard = ({ contestants, judges, categories, criteria, scores, setActiveSection }) => {
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'eliminated', 'disqualified'
+  const [showContestantsModal, setShowContestantsModal] = useState(false);
+  const [showJudgesModal, setShowJudgesModal] = useState(false);
+  const [showScoresModal, setShowScoresModal] = useState(false);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  // Calculate real statistics from props
+  const activeContestants = contestants?.filter(c => c.status === 'Active') || [];
+  const eliminatedContestants = contestants?.filter(c => c.status === 'Eliminated') || [];
+  const disqualifiedContestants = contestants?.filter(c => c.status === 'Disqualified') || [];
+  const activeJudges = judges?.filter(j => j.is_active !== 0) || [];
+  
+  // Calculate average score from contestants with final_score
+  const scoredContestants = contestants?.filter(c => c.final_score && c.final_score > 0) || [];
+  const averageScore = scoredContestants.length > 0 
+    ? (scoredContestants.reduce((sum, c) => sum + parseFloat(c.final_score), 0) / scoredContestants.length).toFixed(1)
+    : '0.0';
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      
-      console.log('Fetching dashboard data...');
-      
-      // Fetch all data from backend APIs
-      const [contestantsResponse, judgesResponse, categoriesResponse, criteriaResponse] = await Promise.all([
-        fetch('http://localhost/Tabolator_Casestudy/backend/api/contestants'),
-        fetch('http://localhost/Tabolator_Casestudy/backend/api/judges'),
-        fetch('http://localhost/Tabolator_Casestudy/backend/api/categories'),
-        fetch('http://localhost/Tabolator_Casestudy/backend/api/criteria')
-      ]);
-
-      console.log('API Responses:', {
-        contestants: contestantsResponse.status,
-        judges: judgesResponse.status,
-        categories: categoriesResponse.status,
-        criteria: criteriaResponse.status
-      });
-
-      const contestantsData = await contestantsResponse.json();
-      const judgesData = await judgesResponse.json();
-      const categoriesData = await categoriesResponse.json();
-      const criteriaData = await criteriaResponse.json();
-
-      console.log('Fetched data:', {
-        contestants: contestantsData.data?.length || 0,
-        judges: judgesData.data?.length || 0,
-        categories: categoriesData.data?.length || 0,
-        criteria: criteriaData.data?.length || 0
-      });
-
-      // Calculate real statistics
-      const activeContestants = contestantsData.data?.filter(c => c.status === 'Active') || [];
-      const eliminatedContestants = contestantsData.data?.filter(c => c.status === 'Eliminated') || [];
-      const disqualifiedContestants = contestantsData.data?.filter(c => c.status === 'Disqualified') || [];
-      const activeJudges = judgesData.data?.filter(j => j.is_active !== 0) || [];
-      
-      // Calculate average score from contestants with final_score
-      const scoredContestants = contestantsData.data?.filter(c => c.final_score && c.final_score > 0) || [];
-      const averageScore = scoredContestants.length > 0 
-        ? (scoredContestants.reduce((sum, c) => sum + parseFloat(c.final_score), 0) / scoredContestants.length).toFixed(1)
-        : '0.0';
-
-      // Calculate top scores from real data
-      const scoredContestantsWithScores = contestantsData.data?.filter(c => c.final_score && c.final_score > 0) || [];
-      const topContestants = scoredContestantsWithScores
-        .sort((a, b) => parseFloat(b.final_score) - parseFloat(a.final_score))
-        .slice(0, 5)
-        .map((c, index) => ({
-          name: c.name,
-          score: parseFloat(c.final_score).toFixed(1),
-          rank: index + 1
-        }));
-
-      setOverallStats({
-        totalContestants: contestantsData.data?.length || 0,
-        activeContestants: activeContestants.length,
-        eliminatedContestants: eliminatedContestants.length,
-        disqualifiedContestants: disqualifiedContestants.length,
-        totalJudges: judgesData.data?.length || 0,
-        activeJudges: activeJudges.length,
-        totalCategories: categoriesData.data?.length || 0,
-        totalCriteria: criteriaData.data?.length || 0,
-        averageScore: averageScore,
-        upcomingEvents: 1 // This would come from events API when implemented
-      });
-
-      // Set recent data (last 5, sorted by creation date)
-      const recentContestantsSorted = (contestantsData.data || [])
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 5);
-      
-      const recentJudgesSorted = (judgesData.data || [])
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 5);
-
-      // Apply status filter to recent contestants
-      const filteredContestants = statusFilter === 'all' 
-        ? recentContestantsSorted
-        : recentContestantsSorted.filter(c => c.status.toLowerCase() === statusFilter);
-
-      setRecentContestants(filteredContestants);
-      setRecentJudges(recentJudgesSorted);
-      setTopScores(topContestants);
-      
-    } catch (error) {
-      console.error('Dashboard data fetch error:', error);
-      alert('Failed to fetch data from backend. Please check if backend is running.');
-      
-      // Set empty data on error
-      setOverallStats({
-        totalContestants: 0,
-        activeContestants: 0,
-        eliminatedContestants: 0,
-        disqualifiedContestants: 0,
-        totalJudges: 0,
-        activeJudges: 0,
-        totalCategories: 0,
-        totalCriteria: 0,
-        averageScore: '0.0'
-      });
-      setRecentContestants([]);
-      setRecentJudges([]);
-      setTopScores([]);
-    } finally {
-      setLoading(false);
-    }
+  const overallStats = {
+    totalContestants: contestants?.length || 0,
+    activeContestants: activeContestants.length,
+    eliminatedContestants: eliminatedContestants.length,
+    disqualifiedContestants: disqualifiedContestants.length,
+    totalJudges: judges?.length || 0,
+    activeJudges: activeJudges.length,
+    totalCategories: categories?.length || 0,
+    totalCriteria: criteria?.length || 0,
+    averageScore: averageScore,
+    upcomingEvents: 1 // This would come from events API when implemented
   };
 
-  const calculateAverageScore = (contestants) => {
-    const scoredContestants = contestants.filter(c => c.final_score && c.final_score > 0);
-    if (scoredContestants.length === 0) return 0;
-    
-    const total = scoredContestants.reduce((sum, c) => sum + parseFloat(c.final_score), 0);
-    return (total / scoredContestants.length).toFixed(1);
-  };
+  // Set recent data (last 5, sorted by creation date)
+  const recentContestantsSorted = (contestants || [])
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 5);
 
-  if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading dashboard...</p>
-      </div>
-    );
-  }
+  const recentJudgesSorted = (judges || [])
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 5);
+
+  // Apply status filter to recent contestants
+  const recentContestants = statusFilter === 'all' 
+    ? recentContestantsSorted
+    : recentContestantsSorted.filter(c => c.status.toLowerCase() === statusFilter);
+
+  const recentJudges = recentJudgesSorted;
+
+  // Calculate top scores from scores data
+  const scoresArray = Array.isArray(scores) ? scores : [];
+  const topScores = scoresArray
+    .filter(score => score.total_score || score.score)
+    .map((score, index) => ({
+      ...score,
+      rank: index + 1,
+      score: parseFloat(score.total_score || score.score || 0)
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 
   return (
     <div className="dashboard">
@@ -165,7 +73,7 @@ const Dashboard = () => {
             <p className="dashboard-subtitle">Tabulator System Management</p>
           </div>
           <div className="header-right">
-            <button className="refresh-btn" onClick={fetchDashboardData}>
+            <button className="refresh-btn">
               <i className="fi fi-rr-refresh"></i>
               <span>Refresh Data</span>
             </button>
@@ -324,7 +232,7 @@ const Dashboard = () => {
                 Recent Judges
               </h3>
               <div className="card-actions">
-                <button className="action-btn-small" onClick={() => window.location.href = '#judges'}>
+                <button className="action-btn-small" onClick={() => setShowJudgesModal(true)}>
                   <i className="fi fi-rr-arrow-right"></i>
                   View All
                 </button>
@@ -365,7 +273,7 @@ const Dashboard = () => {
                 Top Performers
               </h3>
               <div className="card-actions">
-                <button className="action-btn-small" onClick={() => window.location.href = '#scoring'}>
+                <button className="action-btn-small" onClick={() => setShowScoresModal(true)}>
                   <i className="fi fi-rr-arrow-right"></i>
                   Full Rankings
                 </button>
@@ -420,6 +328,164 @@ const Dashboard = () => {
           </div>
         </div>
       </footer>
+
+      {/* Contestants Modal */}
+      {showContestantsModal && (
+        <div className="modal-overlay" onClick={() => setShowContestantsModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                <i className="fi fi-rr-users"></i>
+                All Contestants
+              </h3>
+              <button className="close-btn" onClick={() => setShowContestantsModal(false)}>
+                <i className="fi fi-rr-cross"></i>
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="modal-table-container">
+                {contestants && contestants.length > 0 ? (
+                  <table className="modal-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Date Added</th>
+                        <th>Final Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {contestants.map((contestant, index) => (
+                        <tr key={contestant.id}>
+                          <td>{index + 1}</td>
+                          <td>{contestant.name}</td>
+                          <td>
+                            <span className={`status-badge ${contestant.status.toLowerCase()}`}>
+                              {contestant.status}
+                            </span>
+                          </td>
+                          <td>{new Date(contestant.created_at).toLocaleDateString()}</td>
+                          <td>{contestant.final_score || 'N/A'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="empty-state">
+                    <i className="fi fi-rr-users"></i>
+                    <p>No contestants found</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Judges Modal */}
+      {showJudgesModal && (
+        <div className="modal-overlay" onClick={() => setShowJudgesModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                <i className="fi fi-rr-users"></i>
+                All Judges
+              </h3>
+              <button className="close-btn" onClick={() => setShowJudgesModal(false)}>
+                <i className="fi fi-rr-cross"></i>
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="modal-table-container">
+                {judges && judges.length > 0 ? (
+                  <table className="modal-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>PIN</th>
+                        <th>Status</th>
+                        <th>Date Added</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {judges.map((judge, index) => (
+                        <tr key={judge.id}>
+                          <td>{index + 1}</td>
+                          <td>{judge.name}</td>
+                          <td>
+                            <span className="pin-badge">{judge.pin}</span>
+                          </td>
+                          <td>
+                            <span className={`status-badge ${judge.is_active !== 0 ? 'active' : 'inactive'}`}>
+                              {judge.is_active !== 0 ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td>{new Date(judge.created_at).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="empty-state">
+                    <i className="fi fi-rr-users"></i>
+                    <p>No judges found</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Scores Modal */}
+      {showScoresModal && (
+        <div className="modal-overlay" onClick={() => setShowScoresModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                <i className="fi fi-rr-trophy"></i>
+                Full Rankings
+              </h3>
+              <button className="close-btn" onClick={() => setShowScoresModal(false)}>
+                <i className="fi fi-rr-cross"></i>
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="modal-table-container">
+                {topScores && topScores.length > 0 ? (
+                  <table className="modal-table">
+                    <thead>
+                      <tr>
+                        <th>Rank</th>
+                        <th>Contestant</th>
+                        <th>Category</th>
+                        <th>Total Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topScores.map((score, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{score.contestant_name}</td>
+                          <td>{score.category_name}</td>
+                          <td>{score.total_score}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="empty-state">
+                    <i className="fi fi-rr-trophy"></i>
+                    <p>No scores available</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

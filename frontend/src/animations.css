@@ -1,0 +1,191 @@
+/* Global Fade-in-up Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUpSlow {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUpFast {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.fade-in-up-slow {
+  animation: fadeInUpSlow 0.8s ease-out;
+}
+
+.fade-in-up-fast {
+  animation: fadeInUpFast 0.4s ease-out;
+}
+
+/* Page Container Animations */
+.section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.dashboard-section {
+  animation: fadeInUp 0.7s ease-out;
+}
+
+.category-section,
+.criteria-section,
+.judges-section,
+.contestants-section,
+.scoring-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Card Animations */
+.card,
+.table-container,
+.judge-form-container,
+.contestant-card,
+.criteria-card,
+.scoring-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Modal Animations */
+.modal-overlay,
+.scoring-overlay,
+.alert-overlay {
+  animation: fadeInUpFast 0.3s ease-out;
+}
+
+.modal-card,
+.scoring-modal,
+.alert-modal {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Staggered Animations for Lists */
+.table-row {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.table-row:nth-child(1) { animation-delay: 0.1s; }
+.table-row:nth-child(2) { animation-delay: 0.2s; }
+.table-row:nth-child(3) { animation-delay: 0.3s; }
+.table-row:nth-child(4) { animation-delay: 0.4s; }
+.table-row:nth-child(5) { animation-delay: 0.5s; }
+.table-row:nth-child(6) { animation-delay: 0.6s; }
+.table-row:nth-child(7) { animation-delay: 0.7s; }
+.table-row:nth-child(8) { animation-delay: 0.8s; }
+.table-row:nth-child(9) { animation-delay: 0.9s; }
+.table-row:nth-child(10) { animation-delay: 1.0s; }
+
+/* Contestant Cards Staggered Animation */
+.contestant-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.contestant-card:nth-child(1) { animation-delay: 0.1s; }
+.contestant-card:nth-child(2) { animation-delay: 0.2s; }
+.contestant-card:nth-child(3) { animation-delay: 0.3s; }
+.contestant-card:nth-child(4) { animation-delay: 0.4s; }
+.contestant-card:nth-child(5) { animation-delay: 0.5s; }
+.contestant-card:nth-child(6) { animation-delay: 0.6s; }
+.contestant-card:nth-child(7) { animation-delay: 0.7s; }
+.contestant-card:nth-child(8) { animation-delay: 0.8s; }
+.contestant-card:nth-child(9) { animation-delay: 0.9s; }
+.contestant-card:nth-child(10) { animation-delay: 1.0s; }
+
+/* Button Animations */
+.submit-btn,
+.cancel-btn,
+.add-btn,
+.delete-btn,
+.edit-btn,
+.login-btn,
+.nav-link {
+  animation: fadeInUp 0.7s ease-out;
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Dashboard Items */
+.dashboard-card,
+.stats-card,
+.feature-item {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Sidebar Animation */
+.sidebar {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.sidebar-item {
+  animation: fadeInUp 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.sidebar-item:nth-child(1) { animation-delay: 0.1s; }
+.sidebar-item:nth-child(2) { animation-delay: 0.2s; }
+.sidebar-item:nth-child(3) { animation-delay: 0.3s; }
+.sidebar-item:nth-child(4) { animation-delay: 0.4s; }
+.sidebar-item:nth-child(5) { animation-delay: 0.5s; }
+.sidebar-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* Responsive Animation Adjustments */
+@media (max-width: 768px) {
+  .fade-in-up,
+  .section,
+  .dashboard-section,
+  .category-section,
+  .criteria-section,
+  .judges-section,
+  .contestants-section,
+  .scoring-section {
+    animation-duration: 0.5s;
+  }
+  
+  .card,
+  .table-container,
+  .judge-form-container,
+  .contestant-card,
+  .criteria-card,
+  .scoring-card {
+    animation-duration: 0.4s;
+  }
+}

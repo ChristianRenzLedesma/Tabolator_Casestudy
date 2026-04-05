@@ -1,0 +1,224 @@
+/* Sidebar Styles */
+.App {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: #2c3e50;
+  color: white;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 1000;
+  border-right: 1px solid #34495e;
+}
+
+.sidebar-header {
+  padding: 20px 15px;
+  border-bottom: 1px solid #34495e;
+  background: rgba(52, 73, 94, 0.5);
+}
+
+.sidebar-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ecf0f1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-header h1::before {
+  content: "⚖️";
+  font-size: 1.2rem;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  padding: 6px 12px;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.judge-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(52, 73, 94, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.judge-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+}
+
+.judge-avatar i {
+  font-size: 1.1rem;
+  color: white;
+}
+
+.judge-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.judge-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ecf0f1;
+  margin-bottom: 2px;
+}
+
+.judge-role {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 10px 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav .nav-btn {
+  width: 100%;
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  color: #bdc3c7;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  margin: 2px 0;
+  position: relative;
+}
+
+.sidebar-nav .nav-btn:hover {
+  background: rgba(52, 73, 94, 0.5);
+  color: #ecf0f1;
+  border-left-color: #3498db;
+  transform: translateX(2px);
+}
+
+.sidebar-nav .nav-btn.active {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+  border-left-color: #3498db;
+  font-weight: 600;
+}
+
+.sidebar-nav .nav-btn.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #3498db;
+}
+
+.sidebar-nav .nav-btn i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+  color: #95a5a6;
+  transition: color 0.3s ease;
+}
+
+.sidebar-nav .nav-btn:hover i,
+.sidebar-nav .nav-btn.active i {
+  color: #3498db;
+}
+
+.sidebar-footer {
+  padding: 15px;
+  border-top: 1px solid #34495e;
+  background: rgba(44, 62, 80, 0.5);
+}
+
+.sidebar-footer .logout-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.sidebar-footer .logout-btn:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.App-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 30px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(52, 73, 94, 0.2);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(52, 152, 219, 0.3);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 152, 219, 0.5);
+}

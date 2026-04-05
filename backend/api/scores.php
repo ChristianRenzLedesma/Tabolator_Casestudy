@@ -4,7 +4,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 $database = new Database();
 $pdo = $database->getConnection();
@@ -18,10 +18,11 @@ try {
             $judge_id = $_GET['judge_id'] ?? null;
             $contestant_id = $_GET['contestant_id'] ?? null;
             
-            $sql = "SELECT s.*, c.name as contestant_name, cr.name as criterion_name, cr.category 
+            $sql = "SELECT s.*, c.name as contestant_name, cr.name as criterion_name, cr.category_name as category, j.name as judge_name
                     FROM scores s 
                     JOIN contestants c ON s.contestant_id = c.id 
-                    JOIN criteria cr ON s.criterion_id = cr.id";
+                    JOIN criteria cr ON s.criterion_id = cr.id
+                    LEFT JOIN judges j ON s.judge_id = j.id";
             $params = [];
             
             if ($judge_id) {

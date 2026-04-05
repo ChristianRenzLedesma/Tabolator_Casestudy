@@ -46,6 +46,11 @@ switch ($request_path) {
         require_once 'api/judge-login.php';
         break;
         
+    case '/api/scores':
+    case '/Tabolator_Casestudy/backend/api/scores':
+        require_once 'api/scores.php';
+        break;
+        
     case '/api/user':
     case '/Tabolator_Casestudy/backend/api/user':
         require_once 'api/user.php';
@@ -62,6 +67,7 @@ switch ($request_path) {
                 '/api/judges',
                 '/api/contestants',
                 '/api/judge-login',
+                '/api/scores',
                 '/api/user'
             ]
         ]);

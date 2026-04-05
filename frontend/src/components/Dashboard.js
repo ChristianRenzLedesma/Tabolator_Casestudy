@@ -187,7 +187,7 @@ const Dashboard = ({ contestants, judges, categories, criteria, scores, setActiv
                     Disqualified ({overallStats.disqualifiedContestants})
                   </button>
                 </div>
-                <button className="action-btn-small" onClick={() => window.location.href = '#contestants'}>
+                <button className="action-btn-small" onClick={() => setShowContestantsModal(true)}>
                   <i className="fi fi-rr-arrow-right"></i>
                   View All
                 </button>

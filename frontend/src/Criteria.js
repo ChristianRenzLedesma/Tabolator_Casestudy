@@ -104,13 +104,8 @@ const Criteria = ({
 
   return (
     <section className="section">
-      <div className="section-header">
         <h2>Adding Criteria</h2>
-        <button className="refresh-btn" onClick={handleRefresh} title="Refresh Data">
-          <i className="fi fi-rr-refresh"></i>
-          Refresh
-        </button>
-      </div>
+        
       <div className="category-selector">
         <label>Category: </label>
         <select 
